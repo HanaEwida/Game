@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GoogleGenAI } from "@google/genai";
 import bgImage from './assets/new.png';
@@ -23,7 +23,7 @@ import {
 // --- Types ---
 interface Vocab {
   r: string;
-  d: string; // Changed from 'e' to 'd' for description in Russian
+  d: string;
 }
 
 interface Clue {
@@ -188,6 +188,29 @@ const SOUNDS = {
   open: 'https://assets.mixkit.co/active_storage/sfx/2567/2567-preview.mp3'
 };
 
+// --- Helper Components ---
+const NavButton = ({ children, active, onClick, disabled, icon }: { children: React.ReactNode, active: boolean, onClick: () => void, disabled?: boolean, icon: React.ReactNode }) => (
+  <button 
+    onClick={onClick}
+    disabled={disabled}
+    className={`flex items-center gap-2 bg-[#251830] border border-[#4a3060] text-[#a990c8] px-5 py-2 rounded-full text-sm font-bold tracking-tight cursor-pointer transition-all ${active ? 'bg-gradient-to-br from-[#e63946] to-[#f4a261] border-transparent text-white shadow-lg' : ''} ${disabled ? 'opacity-35 cursor-not-allowed' : 'hover:border-[#ffd166]'}`}
+  >
+    {icon}
+    {children}
+  </button>
+);
+
+const Hotspot = ({ id, top, left, icon, found, onClick }: { id: number, top: string, left: string, icon: string, found: boolean, onClick: () => void }) => (
+  <button 
+    onClick={onClick}
+    className="absolute w-11 h-11 bg-black/60 border-2 border-[#ffd166] rounded-full flex items-center justify-center text-xl cursor-pointer transition-all z-10 shadow-[0_0_15px_#ffd166] hover:scale-125 hover:bg-[#e63946] hover:shadow-[0_0_20px_#e63946] animate-pulse"
+    style={{ top, left, opacity: found ? 0.4 : 1 }}
+  >
+    {icon}
+  </button>
+);
+
+// --- Main App ---
 export default function App() {
   const [screen, setScreen] = useState<'intro' | 'main' | 'result'>('intro');
   const [tab, setTab] = useState<'room' | 'vote' | 'puzzle' | 'nb'>('room');
@@ -204,7 +227,7 @@ export default function App() {
   const [aiDefinition, setAiDefinition] = useState<string | null>(null);
   const [isDefining, setIsDefining] = useState(false);
 
-  const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+  const ai = useMemo(() => new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' }), []);
 
   const getWordDefinition = async (word: string) => {
     const cleanWord = word.replace(/[.,!?;:()]/g, "").trim();
@@ -725,26 +748,6 @@ export default function App() {
   );
 }
 
-function NavButton({ children, active, onClick, disabled, icon }: { children: React.ReactNode, active: boolean, onClick: () => void, disabled?: boolean, icon: React.ReactNode }) {
-  return (
-    <button 
-      onClick={onClick}
-      disabled={disabled}
-      className={`flex items-center gap-2 bg-[#251830] border border-[#4a3060] text-[#a990c8] px-5 py-2 rounded-full text-sm font-bold tracking-tight cursor-pointer transition-all ${active ? 'bg-gradient-to-br from-[#e63946] to-[#f4a261] border-transparent text-white shadow-lg' : ''} ${disabled ? 'opacity-35 cursor-not-allowed' : 'hover:border-[#ffd166]'}`}
-    >
-      {icon}
-      {children}
-    </button>
-  );
-}
-
-function Hotspot({ id, top, left, icon, found, onClick }: { id: number, top: string, left: string, icon: string, found: boolean, onClick: () => void }) {
-  return (
-    <button 
-      onClick={onClick}
-      className="absolute w-11 h-11 bg-black/60 border-2 border-[#ffd166] rounded-full flex items-center justify-center text-xl cursor-pointer transition-all z-10 shadow-[0_0_15px_#ffd166] hover:scale-125 hover:bg-[#e63946] hover:shadow-[0_0_20px_#e63946] animate-pulse"
-      style={{ top, left, opacity: found ? 0.4 : 1 }}
-    >
       {icon}
     </button>
   );
