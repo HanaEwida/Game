@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { GoogleGenAI } from "@google/genai";
+import bgImage from './assets/new.png';
 import { 
   Search, 
   User, 
@@ -319,8 +320,8 @@ export default function App() {
     <div className="min-h-screen bg-[#1a1025] text-[#f0e6ff] font-sans selection:bg-[#ff6b6b] selection:text-white relative overflow-x-hidden">
       {/* Immersive Background */}
       <div 
-        className="fixed inset-0 bg-cover bg-center opacity-20 pointer-events-none grayscale-[50%]"
-        style={{ backgroundImage: "url('/new.png')" }}
+        className="fixed inset-0 bg-cover bg-center opacity-40 pointer-events-none grayscale-[30%]"
+        style={{ backgroundImage: `url(${bgImage})`, backgroundColor: '#1a1025' }}
       />
       <div className="fixed inset-0 bg-gradient-to-b from-[#1a1025]/80 via-[#1a1025]/95 to-[#1a1025] pointer-events-none" />
 
@@ -423,8 +424,8 @@ export default function App() {
                 </div>
 
                 <div 
-                  className="relative w-full h-[600px] bg-cover bg-center rounded-2xl border-4 border-[#4a3060] overflow-hidden shadow-2xl mb-6"
-                  style={{ backgroundImage: "url('/new.png')" }}
+                  className="relative w-full h-[600px] bg-cover bg-center rounded-2xl border-4 border-[#4a3060] overflow-hidden shadow-2xl mb-6 bg-[#251830]"
+                  style={{ backgroundImage: `url(${bgImage})` }}
                 >
                   {/* Hotspots */}
                   <Hotspot id={1} top="60%" left="47%" icon="🍎" found={foundClues.includes(1)} onClick={() => handleClueClick(1)} />
@@ -744,6 +745,11 @@ function Hotspot({ id, top, left, icon, found, onClick }: { id: number, top: str
       className="absolute w-11 h-11 bg-black/60 border-2 border-[#ffd166] rounded-full flex items-center justify-center text-xl cursor-pointer transition-all z-10 shadow-[0_0_15px_#ffd166] hover:scale-125 hover:bg-[#e63946] hover:shadow-[0_0_20px_#e63946] animate-pulse"
       style={{ top, left, opacity: found ? 0.4 : 1 }}
     >
+      {icon}
+    </button>
+  );
+}
+
       {icon}
     </button>
   );
