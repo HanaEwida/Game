@@ -747,13 +747,3 @@ export default function App() {
     </div>
   );
 }
-
-      {icon}
-    </button>
-  );
-}
-
-      {icon}
-    </button>
-  );
-}
